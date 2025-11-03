@@ -22,14 +22,15 @@ export class NotificationManager {
         try {
             // Register service worker with resolved path
             const swPath = pathConfig.resolvePath('service-worker.js');
-            // Ensure scope always has trailing slash for Service Worker spec compliance
-            let swScope = pathConfig.getBasePath();
             
-            // Always ensure trailing slash - required by Service Worker spec
-            if (!swScope) {
+            // Get base path and ALWAYS ensure trailing slash for Service Worker spec compliance
+            // Service Worker spec requires scope to end with / to match the max scope allowed
+            let swScope = pathConfig.getBasePath();
+            if (!swScope || swScope === '') {
                 swScope = '/';
-            } else if (!swScope.endsWith('/')) {
-                swScope += '/';
+            } else {
+                // Ensure trailing slash is present
+                swScope = swScope.endsWith('/') ? swScope : swScope + '/';
             }
             
             console.log('[NotificationManager] Registering service worker:', { swPath, swScope });
