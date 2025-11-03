@@ -48,7 +48,7 @@ async function initializeApp(configManager) {
         // Create initial broker instance
         const broker = BrokerFactory.create(configManager);
         
-        // Initialize message manager
+        // Initialize message manager (without subscribing yet)
         messageManager = new MessageManager(broker, storageManager);
         
         // Initialize UI controller
@@ -72,7 +72,8 @@ async function initializeApp(configManager) {
         console.log('Auto-connecting to message broker...');
         await connectionManager.connect();
         
-        // Set up message subscription after connection is established
+        // Set up message subscription AFTER connection is established
+        console.log('Setting up message subscription...');
         messageManager.setupMessageSubscription();
         
         // Listen for broker change events (from settings panel)
@@ -90,10 +91,11 @@ async function initializeApp(configManager) {
                 uiController.messageManager = messageManager;
                 uiController.setupMessageConfirmation();
                 
-                // Switch connection manager to new broker
+                // Switch connection manager to new broker (this will connect)
                 await connectionManager.switchBroker(newBroker);
                 
-                // Set up message subscription after connection is established
+                // Set up message subscription AFTER connection is established
+                console.log('Setting up message subscription after broker switch...');
                 messageManager.setupMessageSubscription();
                 
                 uiController.showSuccessMessage('已切换到 ' + event.detail.brokerType.toUpperCase());

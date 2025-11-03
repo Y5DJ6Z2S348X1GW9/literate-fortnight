@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#4A90E2"/>
+  <g fill="white">
+    <!-- Phone icon -->
+    <rect x="100" y="150" width="120" height="200" rx="15" stroke="white" stroke-width="8" fill="none"/>
+    <circle cx="160" cy="330" r="8"/>
+    
+    <!-- Desktop icon -->
+    <rect x="280" y="180" width="140" height="100" rx="8" stroke="white" stroke-width="8" fill="none"/>
+    <rect x="300" y="280" width="100" height="8" fill="white"/>
+    <rect x="320" y="288" width="60" height="20" rx="4" fill="white"/>
+    
+    <!-- Arrow between devices -->
+    <path d="M 230 240 L 270 240 L 260 230 M 270 240 L 260 250" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
