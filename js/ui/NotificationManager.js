@@ -23,8 +23,12 @@ export class NotificationManager {
             // Register service worker with resolved path
             const swPath = pathConfig.resolvePath('service-worker.js');
             // Ensure scope always has trailing slash for Service Worker spec compliance
-            let swScope = pathConfig.getBasePath() || '/';
-            if (swScope !== '/' && !swScope.endsWith('/')) {
+            let swScope = pathConfig.getBasePath();
+            
+            // Always ensure trailing slash - required by Service Worker spec
+            if (!swScope) {
+                swScope = '/';
+            } else if (!swScope.endsWith('/')) {
                 swScope += '/';
             }
             
