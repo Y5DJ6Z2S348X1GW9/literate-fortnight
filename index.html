@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#4A90E2">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="消息传递">
+    <link rel="apple-touch-icon" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192.png">
+    
+    <!-- Android PWA Support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-72.png">
+    
+    <title>跨设备消息传递</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 配置向导 -->
+        <div id="config-wizard" class="hidden">
+            <div class="wizard-content">
+                <h2>欢迎使用跨设备消息传递</h2>
+                <div class="form-group">
+                    <label for="device-name">设备名称:</label>
+                    <input type="text" id="device-name" placeholder="例如: 我的手机">
+                </div>
+                <div class="form-group">
+                    <label for="channel-name">频道名称:</label>
+                    <input type="text" id="channel-name" placeholder="留空自动生成">
+                </div>
+                <button id="save-config-btn" class="btn-primary">开始使用</button>
+            </div>
+        </div>
+
+        <!-- 主界面 -->
+        <div id="main-app" class="hidden">
+            <!-- 头部状态栏 -->
+            <header class="app-header">
+                <h1>跨设备消息</h1>
+                <div class="header-controls">
+                    <span id="connection-status" class="status-indicator">未连接</span>
+                    <button id="settings-btn" class="btn-icon">⚙️</button>
+                </div>
+            </header>
+
+            <!-- 消息列表 -->
+            <main class="message-container">
+                <div id="message-list" class="message-list"></div>
+            </main>
+
+            <!-- 消息输入 -->
+            <footer class="message-input-container">
+                <textarea id="message-input" placeholder="输入消息..." rows="1"></textarea>
+                <button id="send-btn" class="btn-send">发送</button>
+            </footer>
+        </div>
+
+        <!-- 设置面板 -->
+        <div id="settings-panel" class="settings-panel hidden">
+            <div class="settings-content">
+                <h2>设置</h2>
+                <div class="form-group">
+                    <label for="settings-device-name">设备名称:</label>
+                    <input type="text" id="settings-device-name">
+                </div>
+                <div class="form-group">
+                    <label for="broker-type">消息服务:</label>
+                    <select id="broker-type">
+                        <option value="ably">Ably</option>
+                        <option value="pusher">Pusher</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>频道名称:</label>
+                    <span id="channel-display"></span>
+                </div>
+                <div class="settings-actions">
+                    <button id="save-settings-btn" class="btn-primary">保存</button>
+                    <button id="close-settings-btn" class="btn-secondary">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pusher SDK -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    
+    <!-- Ably SDK -->
+    <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+
+    <!-- Application modules -->
+    <script type="module" src="js/app.js"></script>
+    
+    <!-- Test utilities (for development/testing only) -->
+    <script src="js/test-utils.js"></script>
+</body>
+</html>

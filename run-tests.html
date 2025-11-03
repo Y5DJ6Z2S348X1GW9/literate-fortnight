@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速测试 - 跨设备消息传递</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 10px 10px 0;
+            background: #4A90E2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #357ABD;
+        }
+        .button.secondary {
+            background: #6c757d;
+        }
+        .button.secondary:hover {
+            background: #5a6268;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #4A90E2;
+        }
+        .steps {
+            margin: 20px 0;
+        }
+        .steps ol {
+            margin-left: 20px;
+        }
+        .steps li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 跨设备消息传递系统 - 快速测试</h1>
+        
+        <div class="info">
+            <strong>📝 提示:</strong> 这是一个快速测试入口页面。选择下面的选项开始测试。
+        </div>
+
+        <h2>🚀 开始测试</h2>
+        
+        <div>
+            <a href="test-runner.html" class="button">打开可视化测试运行器</a>
+            <a href="index.html" class="button secondary">打开应用</a>
+        </div>
+
+        <h2>📖 测试文档</h2>
+        
+        <div>
+            <a href="TESTING.md" class="button secondary">完整测试指南</a>
+            <a href="QUICK_TEST_GUIDE.md" class="button secondary">快速参考</a>
+            <a href="TEST_README.md" class="button secondary">测试总览</a>
+            <a href="TESTING_SUMMARY.md" class="button secondary">实施总结</a>
+        </div>
+
+        <div class="steps">
+            <h2>🎯 推荐测试流程</h2>
+            <ol>
+                <li><strong>打开应用</strong> - 点击上方"打开应用"按钮，完成初始配置</li>
+                <li><strong>打开测试运行器</strong> - 点击"打开可视化测试运行器"</li>
+                <li><strong>运行自动化测试</strong> - 在测试运行器中点击"运行所有测试"</li>
+                <li><strong>查看结果</strong> - 观察测试输出，确认所有测试通过</li>
+                <li><strong>手动验证</strong> - 按照测试文档进行跨设备测试</li>
+            </ol>
+        </div>
+
+        <div class="steps">
+            <h2>⚡ 使用浏览器控制台测试</h2>
+            <ol>
+                <li>打开应用 (<code>index.html</code>)</li>
+                <li>按 <code>F12</code> 打开开发者工具</li>
+                <li>在控制台中运行: <code>await runAllTests();</code></li>
+                <li>查看测试结果</li>
+            </ol>
+        </div>
+
+        <div class="info">
+            <strong>💡 提示:</strong> 
+            <ul style="margin: 10px 0 0 20px;">
+                <li>首次测试建议使用可视化测试运行器</li>
+                <li>开发者可以直接使用浏览器控制台</li>
+                <li>完整验证需要在两个设备/窗口间进行手动测试</li>
+                <li>所有测试文档都可以在浏览器中直接打开</li>
+            </ul>
+        </div>
+
+        <h2>📋 测试覆盖</h2>
+        <ul>
+            <li>✅ Ably 消息收发功能</li>
+            <li>✅ Pusher 消息收发功能</li>
+            <li>✅ 自动重连机制</li>
+            <li>✅ 桌面和移动端通知</li>
+            <li>✅ 消息存储和历史</li>
+            <li>✅ 错误处理</li>
+        </ul>
+
+        <div class="info" style="margin-top: 30px; background: #d4edda; border-left-color: #28a745;">
+            <strong>✅ 状态:</strong> 所有测试工具和文档已准备就绪！
+        </div>
+    </div>
+
+    <script>
+        // Log helpful information to console
+        console.log('%c🧪 跨设备消息传递系统 - 测试工具', 'font-size: 20px; font-weight: bold; color: #4A90E2;');
+        console.log('%c可用的测试命令:', 'font-size: 14px; font-weight: bold; color: #333; margin-top: 10px;');
+        console.log('  await runAllTests()         - 运行所有测试');
+        console.log('  await testAblyMessaging()   - 测试 Ably 消息功能');
+        console.log('  await testPusherMessaging() - 测试 Pusher 消息功能');
+        console.log('  await testReconnection()    - 测试重连机制');
+        console.log('  await testNotifications()   - 测试通知功能');
+        console.log('\n%c💡 提示: 先打开应用 (index.html) 再运行测试命令', 'color: #856404; background: #fff3cd; padding: 5px;');
+    </script>
+</body>
+</html>

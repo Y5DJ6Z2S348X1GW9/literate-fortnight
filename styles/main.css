@@ -1,0 +1,579 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 工具类 */
+.hidden {
+    display: none !important;
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #357ABD;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.btn-send {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.btn-send:hover {
+    background-color: #357ABD;
+}
+
+/* 配置向导 */
+#config-wizard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.wizard-content {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+
+.wizard-content h2 {
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #4A90E2;
+}
+
+/* 错误消息 */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+    display: none;
+}
+
+/* 主应用界面 */
+#main-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 头部 */
+.app-header {
+    background-color: #4A90E2;
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.status-indicator {
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.status-indicator.status-connected {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-indicator.status-disconnected {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-indicator.status-connecting {
+    background-color: #ffc107;
+    color: #333;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-indicator.status-failed {
+    background-color: #dc3545;
+    color: white;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* 消息容器 */
+.message-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 消息项 */
+.message-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-item.sent {
+    align-self: flex-end;
+}
+
+.message-item.received {
+    align-self: flex-start;
+}
+
+.message-bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    word-wrap: break-word;
+}
+
+.message-item.sent .message-bubble {
+    background-color: #4A90E2;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message-item.received .message-bubble {
+    background-color: white;
+    color: #333;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message-meta {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+
+.message-item.sent .message-meta {
+    text-align: right;
+}
+
+.message-item.received .message-meta {
+    text-align: left;
+}
+
+/* 消息输入 */
+.message-input-container {
+    background-color: white;
+    padding: 16px 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: none;
+    max-height: 120px;
+    font-family: inherit;
+}
+
+#message-input:focus {
+    outline: none;
+    border-color: #4A90E2;
+}
+
+/* 设置面板 */
+.settings-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.settings-content {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+}
+
+.settings-content h2 {
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.settings-actions button {
+    flex: 1;
+}
+
+#channel-display {
+    font-family: monospace;
+    color: #666;
+    word-break: break-all;
+}
+
+/* 响应式设计 - 移动端 */
+@media (max-width: 768px) {
+    /* 移动端布局优化 */
+    body {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* 允许消息内容选择 */
+    .message-bubble {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+
+    /* 消息项移动端优化 */
+    .message-item {
+        max-width: 85%;
+    }
+
+    /* 向导和设置面板移动端优化 */
+    .wizard-content,
+    .settings-content {
+        padding: 24px;
+        max-width: 100%;
+        margin: 0 16px;
+    }
+
+    /* 头部移动端优化 */
+    .app-header {
+        padding: 12px 16px;
+    }
+
+    .app-header h1 {
+        font-size: 18px;
+    }
+
+    .header-controls {
+        gap: 12px;
+    }
+
+    .status-indicator {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .btn-icon {
+        font-size: 18px;
+        padding: 6px;
+    }
+
+    /* 消息容器移动端优化 */
+    .message-container {
+        padding: 12px;
+        /* 为移动端键盘留出空间 */
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .message-list {
+        gap: 8px;
+    }
+
+    /* 消息气泡移动端优化 */
+    .message-bubble {
+        padding: 10px 14px;
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    .message-meta {
+        font-size: 11px;
+    }
+
+    /* 消息输入移动端优化 */
+    .message-input-container {
+        padding: 12px;
+        gap: 8px;
+        /* 适配移动端安全区域 */
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+
+    #message-input {
+        font-size: 16px; /* 防止 iOS 自动缩放 */
+        padding: 12px;
+        min-height: 44px; /* iOS 推荐的最小触摸目标 */
+    }
+
+    .btn-send {
+        padding: 12px 20px;
+        min-height: 44px; /* iOS 推荐的最小触摸目标 */
+        font-size: 15px;
+    }
+
+    /* 表单元素移动端优化 */
+    .form-group input,
+    .form-group select {
+        font-size: 16px; /* 防止 iOS 自动缩放 */
+        padding: 12px;
+        min-height: 44px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 14px 24px;
+        font-size: 16px;
+        min-height: 44px;
+    }
+
+    /* Toast 移动端优化 */
+    .toast {
+        right: 10px;
+        left: 10px;
+        top: 70px;
+        max-width: none;
+        font-size: 14px;
+    }
+
+    /* 设置面板移动端优化 */
+    .settings-actions {
+        flex-direction: column;
+    }
+
+    .settings-actions button {
+        width: 100%;
+    }
+}
+
+/* 小屏幕移动设备 (iPhone SE 等) */
+@media (max-width: 375px) {
+    .app-header h1 {
+        font-size: 16px;
+    }
+
+    .message-bubble {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .wizard-content,
+    .settings-content {
+        padding: 20px;
+        margin: 0 12px;
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .message-container {
+        padding: 8px;
+    }
+
+    .app-header {
+        padding: 8px 12px;
+    }
+
+    .message-input-container {
+        padding: 8px;
+    }
+
+    #message-input {
+        max-height: 60px;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 增大可点击区域 */
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* 优化触摸反馈 */
+    button:active {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+
+    .message-bubble:active {
+        opacity: 0.9;
+    }
+}
+
+/* Toast notifications */
+.toast {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease-out;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-success {
+    background-color: #28a745;
+}
+
+.toast-error {
+    background-color: #dc3545;
+}
+
+.toast-info {
+    background-color: #17a2b8;
+}
+
+@media (max-width: 768px) {
+    .toast {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}

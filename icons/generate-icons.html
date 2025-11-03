@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成应用图标</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4A90E2;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .icon-item {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-width: 100%;
+        }
+        button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #357ABD;
+        }
+        .info {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>生成应用图标</h1>
+    
+    <div class="info">
+        <p>这个工具会生成简单的占位图标。点击"生成所有图标"按钮，然后右键点击每个图标并选择"另存为"来保存它们。</p>
+        <p>建议使用专业的图标设计工具创建更好看的图标。</p>
+    </div>
+    
+    <button onclick="generateAllIcons()">生成所有图标</button>
+    
+    <div id="icon-grid" class="icon-grid"></div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#4A90E2');
+            gradient.addColorStop(1, '#357ABD');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw message icon
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.05;
+            
+            // Message bubble
+            const bubbleSize = size * 0.6;
+            const x = (size - bubbleSize) / 2;
+            const y = (size - bubbleSize) / 2;
+            const radius = bubbleSize * 0.1;
+            
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + bubbleSize - radius, y);
+            ctx.quadraticCurveTo(x + bubbleSize, y, x + bubbleSize, y + radius);
+            ctx.lineTo(x + bubbleSize, y + bubbleSize - radius);
+            ctx.quadraticCurveTo(x + bubbleSize, y + bubbleSize, x + bubbleSize - radius, y + bubbleSize);
+            ctx.lineTo(x + bubbleSize * 0.6, y + bubbleSize);
+            ctx.lineTo(x + bubbleSize * 0.5, y + bubbleSize * 1.15);
+            ctx.lineTo(x + bubbleSize * 0.5, y + bubbleSize);
+            ctx.lineTo(x + radius, y + bubbleSize);
+            ctx.quadraticCurveTo(x, y + bubbleSize, x, y + bubbleSize - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw dots inside bubble
+            const dotRadius = size * 0.03;
+            const dotY = y + bubbleSize * 0.5;
+            ctx.beginPath();
+            ctx.arc(x + bubbleSize * 0.3, dotY, dotRadius, 0, Math.PI * 2);
+            ctx.arc(x + bubbleSize * 0.5, dotY, dotRadius, 0, Math.PI * 2);
+            ctx.arc(x + bubbleSize * 0.7, dotY, dotRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#4A90E2';
+            ctx.fill();
+            
+            return canvas;
+        }
+        
+        function generateAllIcons() {
+            const grid = document.getElementById('icon-grid');
+            grid.innerHTML = '';
+            
+            sizes.forEach(size => {
+                const canvas = generateIcon(size);
+                
+                const item = document.createElement('div');
+                item.className = 'icon-item';
+                
+                const label = document.createElement('p');
+                label.textContent = `${size}x${size}`;
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = '下载';
+                downloadBtn.onclick = () => downloadIcon(canvas, size);
+                
+                item.appendChild(canvas);
+                item.appendChild(label);
+                item.appendChild(downloadBtn);
+                grid.appendChild(item);
+            });
+        }
+        
+        function downloadIcon(canvas, size) {
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate icons on page load
+        window.addEventListener('load', generateAllIcons);
+    </script>
+</body>
+</html>
