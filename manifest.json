@@ -2,8 +2,8 @@
   "name": "跨设备消息传递",
   "short_name": "消息传递",
   "description": "电脑和手机之间的实时消息互通",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4A90E2",
@@ -38,7 +38,7 @@
       "name": "发送消息",
       "short_name": "发送",
       "description": "快速发送消息",
-      "url": "/",
+      "url": "./",
       "icons": [
         {
           "src": "icons/icon.svg",

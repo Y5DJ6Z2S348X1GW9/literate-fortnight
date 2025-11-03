@@ -1,20 +1,25 @@
 // Service Worker for PWA and Push Notifications
 const CACHE_NAME = 'cross-device-messaging-v1';
+
+// Get base path from service worker scope
+const BASE_PATH = self.registration.scope;
+
+// Use relative paths for caching
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/styles/main.css',
-    '/js/app.js',
-    '/js/config/ConfigManager.js',
-    '/js/storage/StorageManager.js',
-    '/js/brokers/BrokerFactory.js',
-    '/js/brokers/AblyBroker.js',
-    '/js/brokers/PusherBroker.js',
-    '/js/messaging/MessageManager.js',
-    '/js/messaging/ConnectionManager.js',
-    '/js/ui/UIController.js',
-    '/js/ui/ConfigWizard.js',
-    '/manifest.json'
+    './',
+    './index.html',
+    './styles/main.css',
+    './js/app.js',
+    './js/config/ConfigManager.js',
+    './js/storage/StorageManager.js',
+    './js/brokers/BrokerFactory.js',
+    './js/brokers/AblyBroker.js',
+    './js/brokers/PusherBroker.js',
+    './js/messaging/MessageManager.js',
+    './js/messaging/ConnectionManager.js',
+    './js/ui/UIController.js',
+    './js/ui/ConfigWizard.js',
+    './manifest.json'
 ];
 
 // Install event - cache resources
@@ -24,7 +29,9 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then((cache) => {
                 console.log('[Service Worker] Caching app shell');
-                return cache.addAll(urlsToCache);
+                // Resolve relative paths using BASE_PATH
+                const resolvedUrls = urlsToCache.map(url => new URL(url, BASE_PATH).href);
+                return cache.addAll(resolvedUrls);
             })
             .catch((error) => {
                 console.error('[Service Worker] Cache failed:', error);
@@ -85,7 +92,7 @@ self.addEventListener('fetch', (event) => {
             })
             .catch(() => {
                 // Return a custom offline page if available
-                return caches.match('/index.html');
+                return caches.match(new URL('./index.html', BASE_PATH).href);
             })
     );
 });
@@ -94,11 +101,14 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     console.log('[Service Worker] Push received');
     
+    // Use relative path for default icon
+    const defaultIcon = new URL('./icons/icon-192.png', BASE_PATH).href;
+    
     let notificationData = {
         title: '新消息',
         body: '您收到了一条新消息',
-        icon: '/icons/icon-192.png',
-        badge: '/icons/icon-192.png',
+        icon: defaultIcon,
+        badge: defaultIcon,
         tag: 'message-notification',
         requireInteraction: false
     };
@@ -110,8 +120,8 @@ self.addEventListener('push', (event) => {
             notificationData = {
                 title: data.title || '新消息',
                 body: data.body || data.content || '您收到了一条新消息',
-                icon: data.icon || '/icons/icon-192.png',
-                badge: '/icons/icon-192.png',
+                icon: data.icon || defaultIcon,
+                badge: defaultIcon,
                 tag: 'message-notification',
                 data: data,
                 requireInteraction: false
@@ -143,9 +153,9 @@ self.addEventListener('notificationclick', (event) => {
                         return client.focus();
                     }
                 }
-                // Otherwise, open a new window
+                // Otherwise, open a new window using relative path
                 if (clients.openWindow) {
-                    return clients.openWindow('/');
+                    return clients.openWindow(new URL('./', BASE_PATH).href);
                 }
             })
     );
@@ -162,10 +172,11 @@ self.addEventListener('message', (event) => {
     // Handle show notification request from app
     if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
         const { title, body, icon, data } = event.data;
+        const defaultIcon = new URL('./icons/icon-192.png', BASE_PATH).href;
         self.registration.showNotification(title, {
             body,
-            icon: icon || '/icons/icon-192.png',
-            badge: '/icons/icon-192.png',
+            icon: icon || defaultIcon,
+            badge: defaultIcon,
             tag: 'message-notification',
             data,
             requireInteraction: false

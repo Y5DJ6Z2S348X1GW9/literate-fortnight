@@ -1,3 +1,5 @@
+import { pathConfig } from '../config/PathConfig.js';
+
 /**
  * NotificationManager - Handles push notifications for mobile devices
  */
@@ -18,8 +20,15 @@ export class NotificationManager {
         }
 
         try {
-            // Register service worker
-            this.registration = await navigator.serviceWorker.register('/service-worker.js');
+            // Register service worker with resolved path
+            const swPath = pathConfig.resolvePath('service-worker.js');
+            const swScope = pathConfig.getBasePath() || '/';
+            
+            console.log('[NotificationManager] Registering service worker:', { swPath, swScope });
+            
+            this.registration = await navigator.serviceWorker.register(swPath, {
+                scope: swScope
+            });
             console.log('[NotificationManager] Service Worker registered:', this.registration);
 
             // Wait for service worker to be ready
@@ -29,6 +38,11 @@ export class NotificationManager {
             return true;
         } catch (error) {
             console.error('[NotificationManager] Service Worker registration failed:', error);
+            console.error('[NotificationManager] Attempted path:', pathConfig.resolvePath('service-worker.js'));
+            console.error('[NotificationManager] Error details:', error.message);
+            
+            // Mark as unsupported to gracefully degrade
+            this.isSupported = false;
             return false;
         }
     }
@@ -71,12 +85,16 @@ export class NotificationManager {
         }
 
         try {
+            // Resolve icon and badge paths
+            const defaultIcon = pathConfig.resolveAssetPath('icons/icon-192.png');
+            const defaultBadge = pathConfig.resolveAssetPath('icons/icon-192.png');
+            
             // If service worker is available, use it to show notification
             if (this.registration) {
                 await this.registration.showNotification(title, {
                     body,
-                    icon: options.icon || '/icons/icon-192.png',
-                    badge: '/icons/icon-192.png',
+                    icon: options.icon || defaultIcon,
+                    badge: options.badge || defaultBadge,
                     tag: options.tag || 'message-notification',
                     data: options.data || {},
                     requireInteraction: false,
@@ -87,7 +105,7 @@ export class NotificationManager {
                 // Fallback to regular notification API
                 new Notification(title, {
                     body,
-                    icon: options.icon || '/icons/icon-192.png',
+                    icon: options.icon || defaultIcon,
                     tag: options.tag || 'message-notification',
                     ...options
                 });
