@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调试页面</title>
+    <base href="/literate-fortnight/">
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #4A90E2;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .success {
+            border-left-color: #28a745;
+            background: #f5fff5;
+        }
+        h1 { color: #333; }
+        h2 { color: #666; font-size: 18px; }
+        pre { 
+            background: #f8f8f8; 
+            padding: 10px; 
+            overflow-x: auto;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 应用诊断页面</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function addTest(title, status, details) {
+            const div = document.createElement('div');
+            div.className = `test ${status}`;
+            div.innerHTML = `
+                <h2>${status === 'success' ? '✅' : '❌'} ${title}</h2>
+                <pre>${details}</pre>
+            `;
+            results.appendChild(div);
+        }
+
+        // Test 1: 基础路径
+        addTest('当前URL', 'success', `
+URL: ${window.location.href}
+Pathname: ${window.location.pathname}
+Base: ${document.baseURI}
+        `);
+
+        // Test 2: APP_CONFIG
+        addTest('APP_CONFIG', window.APP_CONFIG ? 'success' : 'error', 
+            window.APP_CONFIG ? JSON.stringify(window.APP_CONFIG, null, 2) : '未定义'
+        );
+
+        // Test 3: CSS加载
+        const cssLoaded = document.styleSheets.length > 1;
+        addTest('CSS加载', cssLoaded ? 'success' : 'error', 
+            `已加载 ${document.styleSheets.length} 个样式表`
+        );
+
+        // Test 4: 测试模块加载
+        addTest('测试模块加载', 'success', '正在测试...');
+        
+        import('./js/config/ConfigManager.js')
+            .then(module => {
+                addTest('ConfigManager模块', 'success', '✅ 模块加载成功');
+                const config = new module.ConfigManager();
+                addTest('ConfigManager实例化', 'success', JSON.stringify({
+                    deviceName: config.getDeviceName(),
+                    brokerType: config.getBrokerType(),
+                    channelName: config.getChannelName()
+                }, null, 2));
+            })
+            .catch(error => {
+                addTest('ConfigManager模块', 'error', `
+错误: ${error.message}
+堆栈: ${error.stack}
+                `);
+            });
+
+        // Test 5: 检查DOM元素
+        setTimeout(() => {
+            const app = document.getElementById('app');
+            addTest('DOM元素检查', 'success', `
+#app 存在: ${!!app}
+body 子元素数: ${document.body.children.length}
+            `);
+        }, 100);
+
+        // Test 6: 外部SDK
+        setTimeout(() => {
+            addTest('Pusher SDK', typeof Pusher !== 'undefined' ? 'success' : 'error',
+                typeof Pusher !== 'undefined' ? '✅ Pusher已加载' : '❌ Pusher未加载'
+            );
+            addTest('Ably SDK', typeof Ably !== 'undefined' ? 'success' : 'error',
+                typeof Ably !== 'undefined' ? '✅ Ably已加载' : '❌ Ably未加载'
+            );
+        }, 2000);
+    </script>
+</body>
+</html>
