@@ -8,17 +8,15 @@ export class MessageManager {
         this.messageReceivedCallbacks = [];
         this.sendSuccessCallbacks = [];
         this.sendErrorCallbacks = [];
-        
-        // Subscribe to incoming messages
-        this._setupMessageSubscription();
+        this.isSubscribed = false;
     }
 
     /**
      * Set up subscription to receive messages from the broker
-     * @private
+     * Should be called after the broker is connected
      */
-    _setupMessageSubscription() {
-        if (this.broker) {
+    setupMessageSubscription() {
+        if (this.broker && !this.isSubscribed) {
             this.broker.subscribe('', (data) => {
                 // Create message object with received data
                 const message = {
@@ -45,6 +43,7 @@ export class MessageManager {
                     }
                 });
             });
+            this.isSubscribed = true;
         }
     }
 

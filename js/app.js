@@ -72,6 +72,9 @@ async function initializeApp(configManager) {
         console.log('Auto-connecting to message broker...');
         await connectionManager.connect();
         
+        // Set up message subscription after connection is established
+        messageManager.setupMessageSubscription();
+        
         // Listen for broker change events (from settings panel)
         window.addEventListener('broker-changed', async (event) => {
             console.log('Broker changed to:', event.detail.brokerType);
@@ -89,6 +92,9 @@ async function initializeApp(configManager) {
                 
                 // Switch connection manager to new broker
                 await connectionManager.switchBroker(newBroker);
+                
+                // Set up message subscription after connection is established
+                messageManager.setupMessageSubscription();
                 
                 uiController.showSuccessMessage('已切换到 ' + event.detail.brokerType.toUpperCase());
             } catch (error) {
