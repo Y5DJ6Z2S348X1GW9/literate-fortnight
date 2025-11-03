@@ -39,9 +39,6 @@ export class AblyBroker extends IMessageBroker {
                 this.updateConnectionStatus(ConnectionStatus.FAILED);
             });
 
-            // Get the channel
-            this.channel = this.ably.channels.get(config.channelName);
-
             // Wait for connection to be established
             await new Promise((resolve, reject) => {
                 if (this.ably.connection.state === 'connected') {
@@ -49,8 +46,13 @@ export class AblyBroker extends IMessageBroker {
                 } else {
                     this.ably.connection.once('connected', resolve);
                     this.ably.connection.once('failed', reject);
+                    // Add timeout to prevent hanging
+                    setTimeout(() => reject(new Error('Connection timeout')), 10000);
                 }
             });
+
+            // Get the channel after connection is established
+            this.channel = this.ably.channels.get(config.channelName);
         } catch (error) {
             this.updateConnectionStatus(ConnectionStatus.FAILED);
             throw new Error(`Ably connection failed: ${error.message}`);

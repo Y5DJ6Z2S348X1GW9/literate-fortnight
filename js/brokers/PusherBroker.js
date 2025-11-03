@@ -40,14 +40,6 @@ export class PusherBroker extends IMessageBroker {
                 this.updateConnectionStatus(ConnectionStatus.FAILED);
             });
 
-            // Subscribe to the channel
-            // For client events to work, channel must be private or presence
-            const channelName = config.channelName.startsWith('private-') 
-                ? config.channelName 
-                : `private-${config.channelName}`;
-            
-            this.channel = this.pusher.subscribe(channelName);
-
             // Wait for connection to be established
             await new Promise((resolve, reject) => {
                 if (this.pusher.connection.state === 'connected') {
@@ -60,6 +52,14 @@ export class PusherBroker extends IMessageBroker {
                     setTimeout(() => reject(new Error('Connection timeout')), 10000);
                 }
             });
+
+            // Subscribe to the channel after connection is established
+            // For client events to work, channel must be private or presence
+            const channelName = config.channelName.startsWith('private-') 
+                ? config.channelName 
+                : `private-${config.channelName}`;
+            
+            this.channel = this.pusher.subscribe(channelName);
         } catch (error) {
             this.updateConnectionStatus(ConnectionStatus.FAILED);
             throw new Error(`Pusher connection failed: ${error.message}`);
