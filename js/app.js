@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
     } else {
         console.log('Configuration exists, initializing app...');
+        // Show main app since configuration already exists
+        configWizard.hide();
         initializeApp(configManager);
     }
 });
