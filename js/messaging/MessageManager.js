@@ -9,6 +9,7 @@ export class MessageManager {
         this.sendSuccessCallbacks = [];
         this.sendErrorCallbacks = [];
         this.isSubscribed = false;
+        this.sentMessageIds = new Set(); // Track sent message IDs to avoid echo
     }
 
     /**
@@ -18,6 +19,12 @@ export class MessageManager {
     setupMessageSubscription() {
         if (this.broker && !this.isSubscribed) {
             this.broker.subscribe('', (data) => {
+                // Check if this is our own message (echo)
+                if (this.sentMessageIds.has(data.id)) {
+                    console.log('[MessageManager] Ignoring echo of own message:', data.id);
+                    return;
+                }
+                
                 // Create message object with received data
                 const message = {
                     id: data.id,
@@ -70,6 +77,15 @@ export class MessageManager {
         };
 
         try {
+            // Track this message ID to avoid echo
+            this.sentMessageIds.add(message.id);
+            
+            // Clean up old message IDs (keep only last 100)
+            if (this.sentMessageIds.size > 100) {
+                const idsArray = Array.from(this.sentMessageIds);
+                this.sentMessageIds = new Set(idsArray.slice(-100));
+            }
+            
             // Publish message through broker
             await this.broker.publish('', message);
             
