@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#4A90E2">
     
-    <!-- Base path for GitHub Pages deployment -->
-    <base href="/literate-fortnight/">
-    
-    <!-- Path configuration for module loading -->
+    <!-- Path configuration MUST come before base tag -->
     <script>
         // Configure base path for the application
         window.APP_CONFIG = {
             basePath: '/literate-fortnight'
         };
     </script>
+    
+    <!-- Base path for GitHub Pages deployment -->
+    <base href="/literate-fortnight/">
     
     <!-- PWA Configuration -->
     <link rel="manifest" href="manifest.json">
