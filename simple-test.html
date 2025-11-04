@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>简单测试</title>
+    <script>
+        window.APP_CONFIG = { basePath: '/literate-fortnight' };
+    </script>
+    <base href="/literate-fortnight/">
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .hidden { display: none !important; }
+        .box { padding: 20px; margin: 10px; background: #e3f2fd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎯 简单测试页面</h1>
+    
+    <div class="box">
+        <h2>测试1: HTML显示</h2>
+        <p>如果你能看到这段文字，说明HTML正常加载</p>
+    </div>
+    
+    <div class="box hidden" id="hidden-test">
+        <h2>测试2: CSS hidden类</h2>
+        <p>这段文字应该被隐藏</p>
+    </div>
+    
+    <div class="box" id="js-test">
+        <h2>测试3: JavaScript执行</h2>
+        <p id="js-result">等待JavaScript执行...</p>
+    </div>
+    
+    <div class="box" id="module-test">
+        <h2>测试4: ES6模块加载</h2>
+        <p id="module-result">等待模块加载...</p>
+    </div>
+
+    <script>
+        // Test 3: Basic JavaScript
+        document.getElementById('js-result').textContent = '✅ JavaScript执行成功！';
+        document.getElementById('js-result').style.color = 'green';
+        
+        // Show APP_CONFIG
+        const configInfo = document.createElement('p');
+        configInfo.textContent = 'APP_CONFIG: ' + JSON.stringify(window.APP_CONFIG);
+        document.getElementById('js-test').appendChild(configInfo);
+    </script>
+    
+    <script type="module">
+        // Test 4: ES6 Module
+        try {
+            const module = await import('./js/config/ConfigManager.js');
+            document.getElementById('module-result').textContent = '✅ ES6模块加载成功！';
+            document.getElementById('module-result').style.color = 'green';
+            
+            const config = new module.ConfigManager();
+            const info = document.createElement('p');
+            info.textContent = `设备名称: ${config.getDeviceName() || '(未设置)'}`;
+            document.getElementById('module-test').appendChild(info);
+        } catch (error) {
+            document.getElementById('module-result').textContent = '❌ 模块加载失败: ' + error.message;
+            document.getElementById('module-result').style.color = 'red';
+            console.error(error);
+        }
+    </script>
+</body>
+</html>

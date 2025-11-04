@@ -112,6 +112,19 @@
     <!-- Ably SDK -->
     <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 
+    <!-- Debug: Check if scripts are loading -->
+    <script>
+        console.log('[DEBUG] Page loaded, checking resources...');
+        console.log('[DEBUG] APP_CONFIG:', window.APP_CONFIG);
+        console.log('[DEBUG] Base URI:', document.baseURI);
+        
+        // Check if SDKs loaded
+        setTimeout(() => {
+            console.log('[DEBUG] Pusher loaded:', typeof Pusher !== 'undefined');
+            console.log('[DEBUG] Ably loaded:', typeof Ably !== 'undefined');
+        }, 1000);
+    </script>
+
     <!-- Application modules -->
     <script type="module" src="js/app.js"></script>
     
