@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>主页面诊断</title>
+    <script>
+        window.APP_CONFIG = { basePath: '/literate-fortnight' };
+    </script>
+    <base href="/literate-fortnight/">
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+        .test { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .warning { border-left: 4px solid #ffc107; }
+        h1 { color: #333; }
+        pre { background: #f8f8f8; padding: 10px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔬 主页面完整诊断</h1>
+    <div id="results"></div>
+    
+    <div class="test">
+        <h2>手动测试</h2>
+        <button onclick="testCSS()">测试CSS加载</button>
+        <button onclick="testSDKs()">测试SDK加载</button>
+        <button onclick="testApp()">测试App.js</button>
+        <button onclick="window.location.href='index.html'">打开主页面</button>
+    </div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function addTest(title, status, details) {
+            const div = document.createElement('div');
+            div.className = `test ${status}`;
+            div.innerHTML = `<h2>${title}</h2><pre>${details}</pre>`;
+            results.appendChild(div);
+        }
+
+        // Test 1: 环境检查
+        addTest('✅ 环境检查', 'success', `
+URL: ${window.location.href}
+Base: ${document.baseURI}
+APP_CONFIG: ${JSON.stringify(window.APP_CONFIG, null, 2)}
+        `);
+
+        // Test 2: CSS加载测试
+        function testCSS() {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'styles/main.css';
+            link.onload = () => {
+                addTest('✅ CSS加载成功', 'success', 'styles/main.css 加载完成');
+                
+                // 测试.hidden类
+                const testDiv = document.createElement('div');
+                testDiv.className = 'hidden';
+                testDiv.textContent = '测试';
+                document.body.appendChild(testDiv);
+                const isHidden = window.getComputedStyle(testDiv).display === 'none';
+                document.body.removeChild(testDiv);
+                
+                addTest(isHidden ? '✅ .hidden类工作正常' : '❌ .hidden类不工作', 
+                    isHidden ? 'success' : 'error',
+                    `display: ${window.getComputedStyle(testDiv).display}`
+                );
+            };
+            link.onerror = () => {
+                addTest('❌ CSS加载失败', 'error', 'styles/main.css 加载失败');
+            };
+            document.head.appendChild(link);
+        }
+
+        // Test 3: SDK加载测试
+        function testSDKs() {
+            // Test Pusher
+            const pusher = document.createElement('script');
+            pusher.src = 'https://js.pusher.com/8.2.0/pusher.min.js';
+            pusher.onload = () => {
+                addTest('✅ Pusher SDK加载成功', 'success', 
+                    `typeof Pusher: ${typeof Pusher}`
+                );
+            };
+            pusher.onerror = () => {
+                addTest('❌ Pusher SDK加载失败', 'error', '无法从CDN加载Pusher');
+            };
+            document.head.appendChild(pusher);
+
+            // Test Ably
+            setTimeout(() => {
+                const ably = document.createElement('script');
+                ably.src = 'https://cdn.ably.com/lib/ably.min-1.js';
+                ably.onload = () => {
+                    addTest('✅ Ably SDK加载成功', 'success', 
+                        `typeof Ably: ${typeof Ably}`
+                    );
+                };
+                ably.onerror = () => {
+                    addTest('❌ Ably SDK加载失败', 'error', '无法从CDN加载Ably');
+                };
+                document.head.appendChild(ably);
+            }, 500);
+        }
+
+        // Test 4: App.js加载测试
+        async function testApp() {
+            try {
+                // 先加载所有依赖
+                const ConfigManager = await import('./js/config/ConfigManager.js');
+                addTest('✅ ConfigManager加载成功', 'success', '模块导入成功');
+                
+                const ConfigWizard = await import('./js/ui/ConfigWizard.js');
+                addTest('✅ ConfigWizard加载成功', 'success', '模块导入成功');
+                
+                const StorageManager = await import('./js/storage/StorageManager.js');
+                addTest('✅ StorageManager加载成功', 'success', '模块导入成功');
+                
+                const BrokerFactory = await import('./js/brokers/BrokerFactory.js');
+                addTest('✅ BrokerFactory加载成功', 'success', '模块导入成功');
+                
+                const MessageManager = await import('./js/messaging/MessageManager.js');
+                addTest('✅ MessageManager加载成功', 'success', '模块导入成功');
+                
+                const ConnectionManager = await import('./js/messaging/ConnectionManager.js');
+                addTest('✅ ConnectionManager加载成功', 'success', '模块导入成功');
+                
+                const UIController = await import('./js/ui/UIController.js');
+                addTest('✅ UIController加载成功', 'success', '模块导入成功');
+                
+                addTest('✅ 所有模块加载成功', 'success', '应用程序应该可以正常运行');
+                
+            } catch (error) {
+                addTest('❌ 模块加载失败', 'error', `
+错误: ${error.message}
+堆栈: ${error.stack}
+                `);
+            }
+        }
+
+        // 自动运行基础测试
+        setTimeout(() => {
+            testCSS();
+            testSDKs();
+        }, 500);
+    </script>
+</body>
+</html>
